@@ -4,3 +4,5 @@ out/production/Final_Project/controllers/Main.class
 *.class
 .idea/workspace.xml
 *.class
+out/production/Final_Project/gui/tictactoe.fxml
+out/production/Final_Project/controllers/Main.class
