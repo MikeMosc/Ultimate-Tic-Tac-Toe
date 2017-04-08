@@ -105,7 +105,7 @@ public class SmallBoard implements Board
         smallBoard[square.getX()][square.getY()] = player;
     }
 
-    public Square findBestMove(){
+    public Square findBestMove(BigBoard b){
         int bestVal = -1000;
         Square bestMove = new Square();
         for(int i = 0; i < smallBoard.length; i++){
@@ -114,7 +114,7 @@ public class SmallBoard implements Board
 
                     smallBoard[i][j] = xSpace;
 
-                    int moveVal = miniMax(0, false);
+                    int moveVal = miniMax(0, false, b);
 
                     smallBoard[i][j] = emptySpace;
 
@@ -129,7 +129,7 @@ public class SmallBoard implements Board
         return bestMove;
     }
 
-    public int miniMax(int depth, boolean isMaximizingPlayer){
+    public int miniMax(int depth, boolean isMaximizingPlayer, BigBoard b){
 
         int bestVal = 0;
 
@@ -147,7 +147,7 @@ public class SmallBoard implements Board
 
                         smallBoard[i][j] = xSpace;
 
-                        bestVal = max(bestVal, miniMax(depth+1, !isMaximizingPlayer));
+                        bestVal = max(bestVal, b.miniMax(depth+1, !isMaximizingPlayer));
 
                         //Undo the move
                         smallBoard[i][j] = emptySpace;
@@ -164,7 +164,7 @@ public class SmallBoard implements Board
                     if(smallBoard[i][j] == emptySpace){
                         smallBoard[i][j] = oSpace;
 
-                        bestVal = min(bestVal, miniMax(depth+1, !isMaximizingPlayer));
+                        bestVal = min(bestVal, b.miniMax(depth+1, !isMaximizingPlayer));
 
                         smallBoard[i][j] = emptySpace;
                     }

@@ -1,5 +1,6 @@
 package interfaces;
 
+import models.BigBoard;
 import models.Square;
 
 /**
@@ -11,7 +12,7 @@ public interface Board
     public boolean isGameOver();
     public boolean hasXWon();
     public boolean hasOWon();
-    public Square findBestMove();
-    public int miniMax(int depth, boolean isMaximizingPlayer);
+    public Square findBestMove(BigBoard b);
+    public int miniMax(int depth, boolean isMaximizingPlayer, BigBoard b);
 
 }

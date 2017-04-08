@@ -1,5 +1,6 @@
 package controllers;
 
+import models.BigBoard;
 import models.SmallBoard;
 import models.Square;
 
@@ -7,14 +8,16 @@ public class Main {
 
     public static void main(String[] args) {
 
-        SmallBoard b = new SmallBoard();
+        BigBoard b = new BigBoard();
+        System.out.print(b.toString());
+
         System.out.println(b.toString());
 
         System.out.println("Select turn:\\n\\n1. Computer 2. User: ");
         int choice = b.scan.nextInt();
         if(choice == 1){
             Square p = new Square(0, 0);
-            b.placeMove(p, 'O');
+            b.smallBoards[0][0].placeMove(p, 'O');
             System.out.println(b.toString());
         }
 
