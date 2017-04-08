@@ -1,5 +1,6 @@
 package controllers;
 
+import gui.MainStage;
 import models.BigBoard;
 import models.SmallBoard;
 import models.Square;
@@ -8,6 +9,9 @@ public class Main {
 
     public static void main(String[] args) {
 
+        new MainStage();
+
+        SmallBoard b = new SmallBoard();
         BigBoard b = new BigBoard();
         System.out.print(b.toString());
 
