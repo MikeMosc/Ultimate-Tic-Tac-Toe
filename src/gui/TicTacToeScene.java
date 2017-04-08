@@ -48,13 +48,6 @@ public class TicTacToeScene extends BorderPane {
         } catch (IOException exception) {
             System.out.println("Error or something");
         }
-
-        try {
-            Button butt = (Button) getByCell(0, 1, 1, 1);
-            butt.fire();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     @FXML
@@ -74,6 +67,7 @@ public class TicTacToeScene extends BorderPane {
         newGame.setOnAction(event -> {
             removeContents();
             resetGrid();
+            info.setText("");
         });
 
         this.setCenter(anchor);
@@ -112,9 +106,12 @@ public class TicTacToeScene extends BorderPane {
     public Node getByCell(int bigRow, int bigCol, int smallRow, int smallCol) {
         GridPane pane = grids[bigRow][bigCol];
         for(Node curr : pane.getChildren()) {
-            System.out.println("once");
-            if(GridPane.getRowIndex(curr) == smallRow && GridPane.getColumnIndex(curr) == smallCol) {
-                return curr;
+            if(curr instanceof BorderPane && pane.getRowIndex(curr) == smallRow && pane.getColumnIndex(curr) == smallCol) {
+                for(Node child : ((BorderPane) curr).getChildren()) {
+                    if (child instanceof Button) {
+                        return child;
+                    }
+                }
             }
         }
         return null;
@@ -135,9 +132,13 @@ public class TicTacToeScene extends BorderPane {
 
         @Override
         public void handle(ActionEvent event) {
-            source.setText("X");
-            System.out.println("You should be in large grid row: " + bigRow + " col: " + bigCol);
-            System.out.println("You should be in small grid row: " + smallRow + " col: " + smallCol);
+            if (source.getText().equals("-")) {
+                source.setText("X");
+                info.setText("large grid row: " + bigRow + " col: " + bigCol + "\n" +
+                        "small grid row: " + smallRow + " col: " + smallCol);
+            } else {
+                info.setText("Spot already taken!");
+            }
         }
     }
 }

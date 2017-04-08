@@ -11,7 +11,7 @@ public class Main {
 
         new MainStage();
 
-        SmallBoard b = new SmallBoard();
+        /*SmallBoard b = new SmallBoard();
         BigBoard b = new BigBoard();
         System.out.print(b.toString());
 
@@ -45,7 +45,7 @@ public class Main {
             System.out.println("You win! This is not going to get printed.");
         } else {
             System.out.println("It's a draw!");
-        }
+        }*/
 
     }
 }
