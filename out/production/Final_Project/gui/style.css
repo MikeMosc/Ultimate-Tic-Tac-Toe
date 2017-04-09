@@ -1,0 +1,29 @@
+.active {
+    -fx-background-color: rgb(0, 255, 74);
+}
+
+.in-active {
+    -fx-background-color: rgb(255, 59, 71);
+}
+
+.game-small-border {
+    -fx-box-border: black;
+    -fx-border-width: 5px;
+}
+
+.game-large-border {
+    -fx-border-color: black;
+    -fx-border-width: 3px;
+}
+
+.button-transparent {
+    -fx-background-color: transparent;
+}
+
+.x-win {
+    -fx-background-color: rgb(73, 132, 226);
+}
+
+.o-win {
+    -fx-background-color: rgb(255, 242, 77);
+}

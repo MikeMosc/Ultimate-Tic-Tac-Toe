@@ -5,38 +5,42 @@ import models.BigBoard;
 import models.SmallBoard;
 import models.Square;
 
+import java.util.Scanner;
+
 public class Main {
 
     public static void main(String[] args) {
 
-        new MainStage();
+        Scanner scan = new Scanner(System.in);
 
-        SmallBoard b = new SmallBoard();
+        //new MainStage();
+        Square lastMove = new Square();
+        //SmallBoard b = new SmallBoard();
         BigBoard b = new BigBoard();
         System.out.print(b.toString());
 
         System.out.println(b.toString());
 
         System.out.println("Select turn:\\n\\n1. Computer 2. User: ");
-        int choice = b.scan.nextInt();
+        int choice = scan.nextInt();
         if(choice == 1){
             Square p = new Square(0, 0);
-            b.smallBoards[0][0].placeMove(p, 'O');
+            lastMove = b.smallBoards[0][0].placeMove(p, 'O');
             System.out.println(b.toString());
         }
 
         while (!b.isGameOver()) {
             System.out.println("Your move: ");
-            Square userMove = new Square(b.scan.nextInt(), b.scan.nextInt());
+            Square userMove = new Square(scan.nextInt(), scan.nextInt());
 
-            b.placeMove(userMove, 'X'); //2 for O and O is the user
+            lastMove = b.smallBoards[lastMove.getX()][lastMove.getY()].placeMove(userMove, 'X'); //2 for O and O is the user
             System.out.println(b.toString());
             if (b.isGameOver()) {
                 break;
             }
             Square cpu = new Square();
             cpu = b.findBestMove();
-            b.placeMove(cpu, 'O');
+            b.smallBoards[lastMove.getX()][lastMove.getY()].placeMove(cpu, 'O');
             System.out.println(b.toString());
         }
         if (b.hasOWon()) {

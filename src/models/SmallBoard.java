@@ -20,6 +20,7 @@ public class SmallBoard implements Board
     private final char xSpace = 'X'; //Player
     private final char oSpace = 'O'; //Computer
     private final char emptySpace = '_';
+    boolean isActive = true;
 
     public SmallBoard(){
 
@@ -38,6 +39,7 @@ public class SmallBoard implements Board
 
         if(hasXWon() || hasOWon() || getAvailableMoves().isEmpty()){
             b = true;
+            isActive = false;
         }
 
         return b;
@@ -101,8 +103,9 @@ public class SmallBoard implements Board
         placeMove(point, xSpace);
     }
 
-    public void placeMove(Square square, char player){
+    public Square placeMove(Square square, char player){
         smallBoard[square.getX()][square.getY()] = player;
+        return square;
     }
 
     public Square findBestMove(BigBoard b){
@@ -114,7 +117,7 @@ public class SmallBoard implements Board
 
                     smallBoard[i][j] = xSpace;
 
-                    int moveVal = miniMax(0, false, b);
+                    int moveVal = miniMax(0, false, b, -1000, 1000);
 
                     smallBoard[i][j] = emptySpace;
 
@@ -129,7 +132,7 @@ public class SmallBoard implements Board
         return bestMove;
     }
 
-    public int miniMax(int depth, boolean isMaximizingPlayer, BigBoard b){
+    public int miniMax(int depth, boolean isMaximizingPlayer, BigBoard b, int alpha, int beta){
 
         int bestVal = 0;
 
@@ -147,10 +150,18 @@ public class SmallBoard implements Board
 
                         smallBoard[i][j] = xSpace;
 
-                        bestVal = max(bestVal, b.miniMax(depth+1, !isMaximizingPlayer));
+                        if(beta <= alpha){
+                            break;
+                        }
+
+                        bestVal = max(bestVal, b.miniMax(depth+1, !isMaximizingPlayer, alpha, beta));
+                        alpha = max(alpha, bestVal);
+
+                        smallBoard[i][j] = emptySpace;
+
 
                         //Undo the move
-                        smallBoard[i][j] = emptySpace;
+
                     }
                 }
             }
@@ -164,9 +175,16 @@ public class SmallBoard implements Board
                     if(smallBoard[i][j] == emptySpace){
                         smallBoard[i][j] = oSpace;
 
-                        bestVal = min(bestVal, b.miniMax(depth+1, !isMaximizingPlayer));
+                        if(beta <= alpha){
+                            break;
+                        }
+
+                        bestVal = min(bestVal, b.miniMax(depth+1, !isMaximizingPlayer, alpha, beta));
 
                         smallBoard[i][j] = emptySpace;
+
+                        beta = min(beta, bestVal);
+
                     }
                 }
             }

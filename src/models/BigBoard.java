@@ -14,7 +14,7 @@ import static java.lang.Math.max;
 public class BigBoard
 {
     BigBoard bigBoard = this;
-    private SmallBoard[][] smallBoards = new SmallBoard[3][3];
+    public SmallBoard[][] smallBoards = new SmallBoard[3][3];
 
     List<Square> availableMoves;
 
@@ -44,9 +44,11 @@ public class BigBoard
         availableMoves = new ArrayList<>();
         for(int i = 0; i < smallBoards.length; i++){
             for(int j = 0; j < smallBoards[0].length; j++){
-                if(smallBoards[i][j].hasOWon() == false && smallBoards[i][j].hasXWon() == false && smallBoards[i][j].getAvailableMoves().isEmpty()){
+
+                if(smallBoards[i][j].isActive == true){
                     availableMoves.add(new Square(i, j));
                 }
+
             }
         }
         return availableMoves;
@@ -92,13 +94,15 @@ public class BigBoard
     }
 
     public Square findBestMove(){
-        int bestVal = -1000;
+        int alpha = -1000;
+        int beta = 1000;
+        int bestVal = 0;
         Square bestMove = new Square();
         for(int i = 0; i < smallBoards.length; i++){
             for(int j = 0; j < smallBoards[0].length; j++){
                 if(smallBoards[i][j].getAvailableMoves().isEmpty() == false){
 
-                    int moveVal = miniMax(0, false);
+                    int moveVal = smallBoards[i][j].miniMax(0, false, bigBoard, alpha, beta);
 
                     if(moveVal > bestVal){
                         bestMove.setX(i);
@@ -111,9 +115,9 @@ public class BigBoard
         return bestMove;
     }
 
-    public int miniMax(int depth, boolean isMaximizingPlayer){
+    public int miniMax(int depth, boolean isMaximizingPlayer, int alpha, int beta){
 
-        int bestVal = 0;
+        int bestVal = 0; //alpha
 
         if (hasXWon()) return 10 - depth;
         if (hasOWon()) return -10 + depth;
@@ -121,28 +125,49 @@ public class BigBoard
         List<Square> statesAvailable = getAvailableMoves();
         if (statesAvailable.isEmpty()) return 0;
 
-        if(isMaximizingPlayer){
-            bestVal = -1000;
-            for(int i = 0; i < smallBoards.length; i++){
-                for(int j = 0; j < smallBoards[0].length; j++){
-                    if(smallBoards[i][j].getAvailableMoves().isEmpty() == false){
+        while(depth < 3)
+        {
+            if (isMaximizingPlayer)
+            {
+                bestVal = -1000;
+                for (int i = 0; i < smallBoards.length; i++)
+                {
+                    for (int j = 0; j < smallBoards[0].length; j++)
+                    {
+                        if (smallBoards[i][j].getAvailableMoves().isEmpty() == false)
+                        {
 
-                        bestVal = max(bestVal, smallBoards[i][j].miniMax(depth+1, isMaximizingPlayer, bigBoard));
+                            if (beta <= alpha)
+                            {
+                                break;
+                            }
+                            bestVal = max(bestVal, smallBoards[i][j].miniMax(depth + 1, isMaximizingPlayer, bigBoard, alpha, beta));
+                            alpha = max(alpha, bestVal);
 
+                        }
                     }
                 }
             }
-        }
-        else{
-            //Minimax will always start with Minimizing (computer) player
-            bestVal = 1000;
+            else
+            {
+                //Minimax will always start with Minimizing (computer) player
+                bestVal = 1000;
 
-            for(int i = 0; i < smallBoards.length; i++){
-                for(int j = 0; j <  smallBoards[0].length; j++){
-                    if(smallBoards[i][j].getAvailableMoves().isEmpty() == false){
+                for (int i = 0; i < smallBoards.length; i++)
+                {
+                    for (int j = 0; j < smallBoards[0].length; j++)
+                    {
+                        if (smallBoards[i][j].getAvailableMoves().isEmpty() == false)
+                        {
 
-                        bestVal = min(bestVal, smallBoards[i][j].miniMax(depth+1, isMaximizingPlayer, bigBoard));
+                            if (beta <= alpha)
+                            {
+                                break;
+                            }
+                            bestVal = min(bestVal, smallBoards[i][j].miniMax(depth + 1, isMaximizingPlayer, bigBoard, alpha, beta));
+                            beta = min(beta, bestVal);
 
+                        }
                     }
                 }
             }
