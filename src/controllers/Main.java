@@ -14,7 +14,7 @@ public class Main {
         Scanner scan = new Scanner(System.in);
 
         //new MainStage();
-        Square lastMove = new Square();
+        Square lastMove = new Square(0,0);
         //SmallBoard b = new SmallBoard();
         BigBoard b = new BigBoard();
         System.out.print(b.toString());
@@ -24,8 +24,8 @@ public class Main {
         System.out.println("Select turn:\\n\\n1. Computer 2. User: ");
         int choice = scan.nextInt();
         if(choice == 1){
-            Square p = new Square(0, 0);
-            lastMove = b.smallBoards[0][0].placeMove(p, 'O');
+            Square p = new Square(2, 0);
+            lastMove = b.smallBoards[lastMove.getX()][lastMove.getY()].placeMove(p, 'O');
             System.out.println(b.toString());
         }
 
@@ -39,8 +39,8 @@ public class Main {
                 break;
             }
             Square cpu = new Square();
-            cpu = b.findBestMove();
-            b.smallBoards[lastMove.getX()][lastMove.getY()].placeMove(cpu, 'O');
+            cpu = b.smallBoards[lastMove.getX()][lastMove.getY()].findBestMove(b);
+            lastMove = b.smallBoards[lastMove.getX()][lastMove.getY()].placeMove(cpu, 'O');
             System.out.println(b.toString());
         }
         if (b.hasOWon()) {

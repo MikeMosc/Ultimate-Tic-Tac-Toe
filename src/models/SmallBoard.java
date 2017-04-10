@@ -117,8 +117,9 @@ public class SmallBoard implements Board
 
                     smallBoard[i][j] = xSpace;
 
-                    int moveVal = miniMax(0, false, b, -1000, 1000);
+                    int moveVal = miniMax(0, false, b, -10000, 10000);
 
+                    //Undo the move
                     smallBoard[i][j] = emptySpace;
 
                     if(moveVal > bestVal){
@@ -133,11 +134,11 @@ public class SmallBoard implements Board
     }
 
     public int miniMax(int depth, boolean isMaximizingPlayer, BigBoard b, int alpha, int beta){
-
+        System.out.println("Blah");
         int bestVal = 0;
 
-        if (hasXWon()) return 10 - depth;
-        if (hasOWon()) return -10 + depth;
+        if (hasXWon()) return 1000 - depth;
+        if (hasOWon()) return -1000 + depth;
 
         List<Square> statesAvailable = getAvailableMoves();
         if (statesAvailable.isEmpty()) return 0;
@@ -149,18 +150,21 @@ public class SmallBoard implements Board
                     if(smallBoard[i][j] == emptySpace){
 
                         smallBoard[i][j] = xSpace;
+                        Square lastMove = new Square(i, j);
+
+                        //bestVal = max(bestVal, miniMax(depth+1, !isMaximizingPlayer, b, alpha, beta));
+                        bestVal = max(bestVal, b.miniMax(depth+1, !isMaximizingPlayer, lastMove, alpha, beta));
+                        alpha = max(alpha, bestVal);
+
+
+
+
+                        //Undo the move
+                        smallBoard[i][j] = emptySpace;
 
                         if(beta <= alpha){
                             break;
                         }
-
-                        bestVal = max(bestVal, b.miniMax(depth+1, !isMaximizingPlayer, alpha, beta));
-                        alpha = max(alpha, bestVal);
-
-                        smallBoard[i][j] = emptySpace;
-
-
-                        //Undo the move
 
                     }
                 }
@@ -168,22 +172,25 @@ public class SmallBoard implements Board
         }
         else{
             //Minimax will always start with Minimizing (computer) player
-            bestVal = 1000;
+            bestVal = 10000;
 
             for(int i = 0; i < smallBoard.length; i++){
                 for(int j = 0; j <  smallBoard[0].length; j++){
                     if(smallBoard[i][j] == emptySpace){
                         smallBoard[i][j] = oSpace;
+                        Square lastMove = new Square(i, j);
 
-                        if(beta <= alpha){
-                            break;
-                        }
 
-                        bestVal = min(bestVal, b.miniMax(depth+1, !isMaximizingPlayer, alpha, beta));
+
+                        //bestVal = min(bestVal, miniMax(depth+1, !isMaximizingPlayer, b, alpha, beta));
+                        bestVal = min(bestVal, b.miniMax(depth+1, !isMaximizingPlayer, lastMove, alpha, beta));
 
                         smallBoard[i][j] = emptySpace;
 
                         beta = min(beta, bestVal);
+                        if(beta <= alpha){
+                            break;
+                        }
 
                     }
                 }

@@ -39,20 +39,27 @@ public class BigBoard
         return b;
     }
 
-    public List<Square> getAvailableMoves(){
+    public List<Square> getAvailableMoves(Square lastMove){
 
+        availableMoves = new ArrayList<>();
+
+            if(smallBoards[lastMove.getX()][lastMove.getY()].isActive == true){
+                availableMoves.add(new Square(lastMove.getX(), lastMove.getY()));
+            }
+        return availableMoves;
+
+    }
+
+    public List<Square> getAvailableMoves(){
         availableMoves = new ArrayList<>();
         for(int i = 0; i < smallBoards.length; i++){
             for(int j = 0; j < smallBoards[0].length; j++){
-
                 if(smallBoards[i][j].isActive == true){
                     availableMoves.add(new Square(i, j));
                 }
-
             }
         }
         return availableMoves;
-
     }
 
     public boolean hasOWon(){
@@ -93,58 +100,49 @@ public class BigBoard
         return false;
     }
 
-    public Square findBestMove(){
-        int alpha = -1000;
-        int beta = 1000;
+//    public Square findBestMove(Square lastMove){
+//        int alpha = -1000;
+//        int beta = 1000;
+//        int bestVal = 0;
+//        Square bestMove = new Square();
+//
+//        int moveVal = miniMax(0, false, lastMove, alpha, beta);
+//
+//        if(moveVal > bestVal)
+//        {
+//            bestMove.setX(lastMove.getX());
+//            bestMove.setY(lastMove.getY());
+//            bestVal = moveVal;
+//        }
+//
+//        return bestMove;
+//    }
+
+    public int miniMax(int depth, boolean isMaximizingPlayer, Square lastMove, int alpha, int beta)
+    {
+        System.out.println("This Is happening");
         int bestVal = 0;
-        Square bestMove = new Square();
-        for(int i = 0; i < smallBoards.length; i++){
-            for(int j = 0; j < smallBoards[0].length; j++){
-                if(smallBoards[i][j].getAvailableMoves().isEmpty() == false){
-
-                    int moveVal = smallBoards[i][j].miniMax(0, false, bigBoard, alpha, beta);
-
-                    if(moveVal > bestVal){
-                        bestMove.setX(i);
-                        bestMove.setY(j);
-                        bestVal = moveVal;
-                    }
-                }
-            }
-        }
-        return bestMove;
-    }
-
-    public int miniMax(int depth, boolean isMaximizingPlayer, int alpha, int beta){
-
-        int bestVal = 0; //alpha
-
-        if (hasXWon()) return 10 - depth;
-        if (hasOWon()) return -10 + depth;
-
-        List<Square> statesAvailable = getAvailableMoves();
-        if (statesAvailable.isEmpty()) return 0;
-
-        while(depth < 3)
+        while(depth < 2)
         {
+            if (hasXWon())
+                return 1000 - depth;
+            if (hasOWon())
+                return -1000 + depth;
+
+            List<Square> statesAvailable = getAvailableMoves(lastMove);
+            if (statesAvailable.isEmpty())
+                return 0;
+
             if (isMaximizingPlayer)
             {
                 bestVal = -1000;
-                for (int i = 0; i < smallBoards.length; i++)
+                if (smallBoards[lastMove.getX()][lastMove.getY()].getAvailableMoves().isEmpty() == false)
                 {
-                    for (int j = 0; j < smallBoards[0].length; j++)
+                    bestVal = max(bestVal, smallBoards[lastMove.getX()][lastMove.getY()].miniMax(depth, isMaximizingPlayer, bigBoard, alpha, beta));
+                    alpha = max(alpha, bestVal);
+                    if (beta <= alpha)
                     {
-                        if (smallBoards[i][j].getAvailableMoves().isEmpty() == false)
-                        {
-
-                            if (beta <= alpha)
-                            {
-                                break;
-                            }
-                            bestVal = max(bestVal, smallBoards[i][j].miniMax(depth + 1, isMaximizingPlayer, bigBoard, alpha, beta));
-                            alpha = max(alpha, bestVal);
-
-                        }
+                        return bestVal;
                     }
                 }
             }
@@ -153,27 +151,19 @@ public class BigBoard
                 //Minimax will always start with Minimizing (computer) player
                 bestVal = 1000;
 
-                for (int i = 0; i < smallBoards.length; i++)
+                if (smallBoards[lastMove.getX()][lastMove.getY()].getAvailableMoves().isEmpty() == false)
                 {
-                    for (int j = 0; j < smallBoards[0].length; j++)
+                    bestVal = min(bestVal, smallBoards[lastMove.getX()][lastMove.getY()].miniMax(depth, isMaximizingPlayer, bigBoard, alpha, beta));
+                    beta = min(beta, bestVal);
+                    if (beta <= alpha)
                     {
-                        if (smallBoards[i][j].getAvailableMoves().isEmpty() == false)
-                        {
-
-                            if (beta <= alpha)
-                            {
-                                break;
-                            }
-                            bestVal = min(bestVal, smallBoards[i][j].miniMax(depth + 1, isMaximizingPlayer, bigBoard, alpha, beta));
-                            beta = min(beta, bestVal);
-
-                        }
+                        return bestVal;
                     }
                 }
             }
         }
         return bestVal;
-    }
+}
 
 
     public String toString(){
