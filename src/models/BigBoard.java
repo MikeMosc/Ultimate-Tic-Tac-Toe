@@ -122,12 +122,24 @@ public class BigBoard
     {
         System.out.println("This Is happening");
         int bestVal = 0;
-        while(depth < 2)
+
+        if (hasXWon())
         {
-            if (hasXWon())
-                return 1000 - depth;
-            if (hasOWon())
-                return -1000 + depth;
+            return 1000 - depth;
+        }
+        else if (hasOWon())
+        {
+            return -1000 + depth;
+        }
+        else if (availableMoves.isEmpty()){
+            return bestVal;
+        }
+        else if (depth >= 1000000000)
+        {
+            return bestVal;
+        }
+        else
+        {
 
             List<Square> statesAvailable = getAvailableMoves(lastMove);
             if (statesAvailable.isEmpty())
@@ -136,34 +148,33 @@ public class BigBoard
             if (isMaximizingPlayer)
             {
                 bestVal = -1000;
-                if (smallBoards[lastMove.getX()][lastMove.getY()].getAvailableMoves().isEmpty() == false)
+
+                bestVal = max(bestVal, smallBoards[lastMove.getX()][lastMove.getY()].miniMax(depth, isMaximizingPlayer, bigBoard, alpha, beta));
+                alpha = max(alpha, bestVal);
+                if (beta >= alpha)
                 {
-                    bestVal = max(bestVal, smallBoards[lastMove.getX()][lastMove.getY()].miniMax(depth, isMaximizingPlayer, bigBoard, alpha, beta));
-                    alpha = max(alpha, bestVal);
-                    if (beta <= alpha)
-                    {
-                        return bestVal;
-                    }
+                    System.out.println("Bing Bong");
+                    return bestVal;
                 }
+
             }
             else
             {
                 //Minimax will always start with Minimizing (computer) player
                 bestVal = 1000;
 
-                if (smallBoards[lastMove.getX()][lastMove.getY()].getAvailableMoves().isEmpty() == false)
+
+                bestVal = min(bestVal, smallBoards[lastMove.getX()][lastMove.getY()].miniMax(depth, isMaximizingPlayer, bigBoard, alpha, beta));
+                beta = min(beta, bestVal);
+                if (beta <= alpha)
                 {
-                    bestVal = min(bestVal, smallBoards[lastMove.getX()][lastMove.getY()].miniMax(depth, isMaximizingPlayer, bigBoard, alpha, beta));
-                    beta = min(beta, bestVal);
-                    if (beta <= alpha)
-                    {
-                        return bestVal;
-                    }
+                    return bestVal;
                 }
+
             }
         }
         return bestVal;
-}
+    }
 
 
     public String toString(){

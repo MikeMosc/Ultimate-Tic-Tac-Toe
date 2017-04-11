@@ -14,7 +14,7 @@ import static java.lang.Math.max;
  */
 public class SmallBoard implements Board
 {
-    private char[][] smallBoard = new char[3][3];
+    public char[][] smallBoard = new char[3][3];
     List<Square> availableMoves;
     public Scanner scan = new Scanner(System.in);
     private final char xSpace = 'X'; //Player
@@ -117,7 +117,7 @@ public class SmallBoard implements Board
 
                     smallBoard[i][j] = xSpace;
 
-                    int moveVal = miniMax(0, false, b, -10000, 10000);
+                    int moveVal = miniMax(0, false, b, -1000, 1000);
 
                     //Undo the move
                     smallBoard[i][j] = emptySpace;
@@ -137,61 +137,83 @@ public class SmallBoard implements Board
         System.out.println("Blah");
         int bestVal = 0;
 
-        if (hasXWon()) return 1000 - depth;
-        if (hasOWon()) return -1000 + depth;
+        if (hasXWon()){
+            return 1000 - depth;
+        }
+        else if (hasOWon()){
+            return -1000 + depth;
+        }
+        else if(getAvailableMoves().isEmpty()){
+            return bestVal;
+        }
+        else if(depth < 1000000000){
+            return bestVal;
+        }
+        else{
 
-        List<Square> statesAvailable = getAvailableMoves();
-        if (statesAvailable.isEmpty()) return 0;
+            List<Square> statesAvailable = getAvailableMoves();
+            if (statesAvailable.isEmpty())
+                return 0;
 
-        if(isMaximizingPlayer){
-            bestVal = -1000;
-            for(int i = 0; i < smallBoard.length; i++){
-                for(int j = 0; j < smallBoard[0].length; j++){
-                    if(smallBoard[i][j] == emptySpace){
+            if (isMaximizingPlayer)
+            {
+                bestVal = -1000;
+                for (int i = 0; i < smallBoard.length; i++)
+                {
+                    for (int j = 0; j < smallBoard[0].length; j++)
+                    {
+                        if (smallBoard[i][j] == emptySpace)
+                        {
 
-                        smallBoard[i][j] = xSpace;
-                        Square lastMove = new Square(i, j);
+                            smallBoard[i][j] = xSpace;
+                            Square lastMove = new Square(i, j);
 
-                        //bestVal = max(bestVal, miniMax(depth+1, !isMaximizingPlayer, b, alpha, beta));
-                        bestVal = max(bestVal, b.miniMax(depth+1, !isMaximizingPlayer, lastMove, alpha, beta));
-                        alpha = max(alpha, bestVal);
-
-
+                            //bestVal = max(bestVal, miniMax(depth+1, !isMaximizingPlayer, b, alpha, beta));
+                            bestVal = max(bestVal, b.miniMax(depth + 1, !isMaximizingPlayer, lastMove, alpha, beta));
+                            alpha = max(alpha, bestVal);
 
 
-                        //Undo the move
-                        smallBoard[i][j] = emptySpace;
+                            //Undo the move
+                            smallBoard[i][j] = emptySpace;
 
-                        if(beta <= alpha){
-                            break;
+                            if (beta >= alpha)
+                            {
+                                System.out.println("Bing Bong1");
+                                break;
+                            }
+
                         }
-
                     }
                 }
             }
-        }
-        else{
-            //Minimax will always start with Minimizing (computer) player
-            bestVal = 10000;
+            else
+            {
+                //Minimax will always start with Minimizing (computer) player
+                bestVal = 1000;
 
-            for(int i = 0; i < smallBoard.length; i++){
-                for(int j = 0; j <  smallBoard[0].length; j++){
-                    if(smallBoard[i][j] == emptySpace){
-                        smallBoard[i][j] = oSpace;
-                        Square lastMove = new Square(i, j);
+                for (int i = 0; i < smallBoard.length; i++)
+                {
+                    for (int j = 0; j < smallBoard[0].length; j++)
+                    {
+                        if (smallBoard[i][j] == emptySpace)
+                        {
+                            smallBoard[i][j] = oSpace;
+                            Square lastMove = new Square(i, j);
 
 
+                            //bestVal = min(bestVal, miniMax(depth+1, !isMaximizingPlayer, b, alpha, beta));
+                            bestVal = min(bestVal, b.miniMax(depth + 1, !isMaximizingPlayer, lastMove, alpha, beta));
 
-                        //bestVal = min(bestVal, miniMax(depth+1, !isMaximizingPlayer, b, alpha, beta));
-                        bestVal = min(bestVal, b.miniMax(depth+1, !isMaximizingPlayer, lastMove, alpha, beta));
+                            smallBoard[i][j] = emptySpace;
 
-                        smallBoard[i][j] = emptySpace;
+                            beta = min(beta, bestVal);
+                            if (beta <= alpha)
+                            {
+                                System.out.println("Bing Bong3");
+                                break;
+                            }
 
-                        beta = min(beta, bestVal);
-                        if(beta <= alpha){
-                            break;
                         }
-
                     }
                 }
             }
