@@ -16,6 +16,7 @@ public class Main {
         //new MainStage();
         Square lastMove = new Square(0,0);
         //SmallBoard b = new SmallBoard();
+
         BigBoard b = new BigBoard();
         System.out.print(b.toString());
 
