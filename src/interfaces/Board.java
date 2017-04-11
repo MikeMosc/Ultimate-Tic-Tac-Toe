@@ -13,6 +13,6 @@ public interface Board
     public boolean hasXWon();
     public boolean hasOWon();
     public Square findBestMove(BigBoard b);
-    public int miniMax(int depth, boolean isMaximizingPlayer, BigBoard b);
+    public int miniMax(int depth, boolean isMaximizingPlayer, BigBoard b, int alpha, int beta);
 
 }
