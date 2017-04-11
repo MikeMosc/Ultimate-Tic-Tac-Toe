@@ -19,7 +19,7 @@ public class SmallBoard implements Board
     public Scanner scan = new Scanner(System.in);
     private final char xSpace = 'X'; //Player
     private final char oSpace = 'O'; //Computer
-    private final char emptySpace = '_';
+    private final char emptySpace = '-';
     boolean isActive = true;
 
     public SmallBoard(){

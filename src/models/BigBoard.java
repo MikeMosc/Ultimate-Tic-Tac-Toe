@@ -15,6 +15,7 @@ public class BigBoard
 {
     BigBoard bigBoard = this;
     public SmallBoard[][] smallBoards = new SmallBoard[3][3];
+    private boolean isUserMove;
 
     List<Square> availableMoves;
 
@@ -23,6 +24,7 @@ public class BigBoard
     private final char emptySpace = '_';
 
     public BigBoard(){
+        isUserMove = true;
         for(int i = 0; i < smallBoards.length; i++){
             for(int j = 0; j < smallBoards[0].length; j++){
                 smallBoards[i][j] = new SmallBoard();
@@ -174,6 +176,15 @@ public class BigBoard
             }
         }
         return bestVal;
+    }
+
+
+    public boolean isUserMove() {
+        return isUserMove;
+    }
+
+    public void setUserMove(boolean userMove) {
+        isUserMove = userMove;
     }
 
 

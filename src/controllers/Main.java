@@ -12,9 +12,12 @@ public class Main {
     public static void main(String[] args) {
 
         Scanner scan = new Scanner(System.in);
-
-        //new MainStage();
-        Square lastMove = new Square(0,0);
+        try {
+            MainStage main = new MainStage();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        /*Square lastMove = new Square(0,0);
         //SmallBoard b = new SmallBoard();
 
         BigBoard b = new BigBoard();
@@ -50,7 +53,7 @@ public class Main {
             System.out.println("You win! This is not going to get printed.");
         } else {
             System.out.println("It's a draw!");
-        }
+        }*/
 
     }
 }

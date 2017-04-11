@@ -10,6 +10,8 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import models.BigBoard;
+import models.Square;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -38,9 +40,12 @@ public class TicTacToeScene extends BorderPane {
 
     private GridPane[][] grids;
 
+    private BigBoard bigBoard;
+
     TicTacToeScene() {
         grids = new GridPane[3][3];
         begin = true;
+        bigBoard = new BigBoard();
 
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource(
                 "gui\\tictactoe.fxml"));
@@ -108,13 +113,13 @@ public class TicTacToeScene extends BorderPane {
         }
     }
 
-    public Node getByCell(int bigRow, int bigCol, int smallRow, int smallCol) {
+    public Button getByCell(int bigRow, int bigCol, int smallRow, int smallCol) {
         GridPane pane = grids[bigRow][bigCol];
         for(Node curr : pane.getChildren()) {
             if(curr instanceof BorderPane && pane.getRowIndex(curr) == smallRow && pane.getColumnIndex(curr) == smallCol) {
                 for(Node child : ((BorderPane) curr).getChildren()) {
                     if (child instanceof Button) {
-                        return child;
+                        return (Button) child;
                     }
                 }
             }
@@ -150,7 +155,8 @@ public class TicTacToeScene extends BorderPane {
 
         @Override
         public void handle(ActionEvent event) {
-            if(grids[bigRow][bigCol].getStyle().equals(ACTIVE)) {
+            Square cpu = new Square();
+            if(grids[bigRow][bigCol].getStyle().equals(ACTIVE) && bigBoard.isUserMove()) {
                 if(begin) {
                     setAllInactive();
                 }
@@ -170,10 +176,38 @@ public class TicTacToeScene extends BorderPane {
                             .stream()
                             .filter(node -> node instanceof Button)
                             .forEach(node -> node.setStyle(TRANSPARENT));
+                    bigBoard.setUserMove(false);
 
+                    cpu = bigBoard.smallBoards[smallRow][smallCol].findBestMove(bigBoard);
+
+                    //Assigning old small locations to new region to pick valid big board
+                    bigRow = smallRow;
+                    bigCol = smallCol;
+                    //Assigning new small board values from CPU choice
+                    smallRow = cpu.getX();
+                    smallCol = cpu.getY();
+                    getByCell(bigRow, bigCol, smallRow, smallCol).fire();
                 } else {
                     info.setText("Spot already taken!");
                 }
+            } else if(!bigBoard.isUserMove()) {
+                source.setText("O");
+                info.setText("large grid row: " + bigRow + " col: " + bigCol + "\n" +
+                        "small grid row: " + smallRow + " col: " + smallCol);
+
+                grids[bigRow][bigCol].setStyle(INACTIVE);
+                grids[bigRow][bigCol].getChildren()
+                        .stream()
+                        .filter(node -> node instanceof Button)
+                        .forEach(node -> node.setStyle(TRANSPARENT));
+
+                grids[smallRow][smallCol].setStyle(ACTIVE);
+                grids[smallRow][smallCol].getChildren()
+                        .stream()
+                        .filter(node -> node instanceof Button)
+                        .forEach(node -> node.setStyle(TRANSPARENT));
+
+                bigBoard.setUserMove(true);
             } else {
                 info.setText("Can't play there!");
             }
