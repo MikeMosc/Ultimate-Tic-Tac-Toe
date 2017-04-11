@@ -31,13 +31,16 @@ public class TicTacToeScene extends BorderPane {
     @FXML private GridPane small21;
     @FXML private GridPane small22;
     @FXML private Label info;
+    private boolean begin;
+    private final String INACTIVE = "-fx-background-color: rgb(255, 59, 71);";
+    private final String ACTIVE = "-fx-background-color: rgb(0, 255, 74);";
+    private final String TRANSPARENT = "-fx-background-color: transparent;";
 
     private GridPane[][] grids;
-    private Button[][] buttons;
 
-    public TicTacToeScene() {
-        buttons = new Button[9][9];
+    TicTacToeScene() {
         grids = new GridPane[3][3];
+        begin = true;
 
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource(
                 "gui\\tictactoe.fxml"));
@@ -73,7 +76,7 @@ public class TicTacToeScene extends BorderPane {
         this.setCenter(anchor);
     }
 
-    void removeContents() {
+    private void removeContents() {
         for(int i = 0; i < 3; i++) {
             for(int j = 0; j < 3; j++) {
                 ArrayList<BorderPane> removal = grids[i][j].getChildren()
@@ -86,15 +89,17 @@ public class TicTacToeScene extends BorderPane {
         }
     }
 
-    void resetGrid() {
+    private void resetGrid() {
         for(int i = 0; i < 3; i++) {
             for(int j = 0; j < 3; j++) {
+                grids[i][j].getStyleClass().removeAll("in-active", "o-win", "x-win");
+                grids[i][j].setStyle(ACTIVE);
                 for(int k = 0; k < 3; k++) {
                     for(int l = 0; l < 3; l++){
                         BorderPane bp = new BorderPane();
                         Button b = new Button("-");
                         b.setOnAction(new TicTacToeListener(i, j, k, l, b));
-                        b.getStyleClass().add("button-transparent");
+                        b.setStyle(TRANSPARENT);
                         bp.setCenter(b);
                         grids[i][j].add(bp, l, k);
                     }
@@ -117,12 +122,25 @@ public class TicTacToeScene extends BorderPane {
         return null;
     }
 
+    private void setAllInactive() {
+        for(int i = 0; i < 3; i++) {
+            for(int j = 0; j < 3; j++) {
+                grids[i][j].getStyleClass().removeAll("in-active", "o-win", "x-win");
+                grids[i][j].setStyle(INACTIVE);
+            }
+        }
+    }
+
+    private void checkForGlobalWin() {
+
+    }
+
     private class TicTacToeListener implements EventHandler<ActionEvent> {
 
         private int bigRow, bigCol, smallRow, smallCol;
         private Button source;
 
-        public TicTacToeListener(int bigRow, int bigCol, int smallRow, int smallCol, Button source) {
+        TicTacToeListener(int bigRow, int bigCol, int smallRow, int smallCol, Button source) {
             this.bigRow = bigRow;
             this.bigCol = bigCol;
             this.smallRow = smallRow;
@@ -132,12 +150,32 @@ public class TicTacToeScene extends BorderPane {
 
         @Override
         public void handle(ActionEvent event) {
-            if (source.getText().equals("-")) {
-                source.setText("X");
-                info.setText("large grid row: " + bigRow + " col: " + bigCol + "\n" +
-                        "small grid row: " + smallRow + " col: " + smallCol);
+            if(grids[bigRow][bigCol].getStyle().equals(ACTIVE)) {
+                if(begin) {
+                    setAllInactive();
+                }
+                if (source.getText().equals("-")) {
+                    source.setText("X");
+                    info.setText("large grid row: " + bigRow + " col: " + bigCol + "\n" +
+                            "small grid row: " + smallRow + " col: " + smallCol);
+
+                    grids[bigRow][bigCol].setStyle(INACTIVE);
+                    grids[bigRow][bigCol].getChildren()
+                            .stream()
+                            .filter(node -> node instanceof Button)
+                            .forEach(node -> node.setStyle(TRANSPARENT));
+
+                    grids[smallRow][smallCol].setStyle(ACTIVE);
+                    grids[smallRow][smallCol].getChildren()
+                            .stream()
+                            .filter(node -> node instanceof Button)
+                            .forEach(node -> node.setStyle(TRANSPARENT));
+
+                } else {
+                    info.setText("Spot already taken!");
+                }
             } else {
-                info.setText("Spot already taken!");
+                info.setText("Can't play there!");
             }
         }
     }
