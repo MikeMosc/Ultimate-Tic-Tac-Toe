@@ -136,7 +136,7 @@ public class TicTacToeScene extends BorderPane {
         }
     }
 
-    private void checkForGlobalWin() {
+    private void checkForWins() {
 
     }
 
@@ -162,6 +162,10 @@ public class TicTacToeScene extends BorderPane {
                 }
                 if (source.getText().equals("-")) {
                     source.setText("X");
+                    Square player = new Square();
+                    player.setX(smallRow);
+                    player.setY(smallCol);
+                    bigBoard.smallBoards[bigRow][bigCol].placeMove(player, 'X');
                     info.setText("large grid row: " + bigRow + " col: " + bigCol + "\n" +
                             "small grid row: " + smallRow + " col: " + smallCol);
 
@@ -187,6 +191,8 @@ public class TicTacToeScene extends BorderPane {
                     smallRow = cpu.getX();
                     smallCol = cpu.getY();
                     getByCell(bigRow, bigCol, smallRow, smallCol).fire();
+                    bigBoard.smallBoards[bigRow][bigCol].placeMove(cpu, 'O');
+                    checkForWins();
                 } else {
                     info.setText("Spot already taken!");
                 }
@@ -207,6 +213,7 @@ public class TicTacToeScene extends BorderPane {
                         .filter(node -> node instanceof Button)
                         .forEach(node -> node.setStyle(TRANSPARENT));
 
+                checkForWins();
                 bigBoard.setUserMove(true);
             } else {
                 info.setText("Can't play there!");
