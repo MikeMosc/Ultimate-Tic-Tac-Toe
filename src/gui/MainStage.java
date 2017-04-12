@@ -10,6 +10,10 @@ import java.io.IOException;
 
 public class MainStage extends Application {
 
+    public MainStage(){
+
+    }
+
     @Override
     public void start(Stage primaryStage) throws Exception {
         TicTacToeScene ttc = new TicTacToeScene();

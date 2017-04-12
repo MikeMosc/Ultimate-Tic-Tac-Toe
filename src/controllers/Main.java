@@ -11,12 +11,14 @@ public class Main {
 
     public static void main(String[] args) {
 
-        Scanner scan = new Scanner(System.in);
-        try {
-            MainStage main = new MainStage();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        MainStage.launch(MainStage.class);
+
+//        Scanner scan = new Scanner(System.in);
+//        try {
+//            MainStage main = new MainStage();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
         /*Square lastMove = new Square(0,0);
         //SmallBoard b = new SmallBoard();
 
