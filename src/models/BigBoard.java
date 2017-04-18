@@ -1,15 +1,18 @@
 package models;
 
-import interfaces.Board;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import static java.lang.Integer.min;
 import static java.lang.Math.max;
 
 /**
- * Created by Mike on 4/3/2017.
+ * Ultimate Tic Tac Toe Controller class.
+ * This is the controller class for the on-screen view.
+ * This class links up the the fxml file to manipulate all of the UI elements created by JavaFX.
+ * Artificial Intelligence.
+ * April 19th, 2017.
+ * @author Matthew Gimbut
+ * @author Michael Moscariello
  */
 public class BigBoard
 {
@@ -178,11 +181,18 @@ public class BigBoard
         return bestVal;
     }
 
-
+    /**
+     * Getter for the boolean that keeps track of whether it's the user's turn.
+     * @return Whether or not it's the user's turn.
+     */
     public boolean isUserMove() {
         return isUserMove;
     }
 
+    /**
+     * Setter for the boolean that keeps track of whether it's the user's turn.
+     * @param userMove Whether or not it's the user's turn.
+     */
     public void setUserMove(boolean userMove) {
         isUserMove = userMove;
     }
