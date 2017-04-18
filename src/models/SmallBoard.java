@@ -10,7 +10,7 @@ import static java.lang.Integer.min;
 import static java.lang.Math.max;
 
 /**
- * Created by Mike on 4/3/2017.
+ * Created by MelloMike on 4/3/2017.
  */
 public class SmallBoard implements Board
 {
@@ -21,9 +21,10 @@ public class SmallBoard implements Board
     private final char oSpace = 'O'; //Computer
     private final char emptySpace = '-';
     boolean isActive = true;
+    private char hasBeenWonBy;
 
     public SmallBoard(){
-
+        hasBeenWonBy = '-';
         for(int i = 0; i < smallBoard.length; i++)
         {
             for(int j = 0; j < smallBoard[0].length; j++)
@@ -229,5 +230,13 @@ public class SmallBoard implements Board
         }
 
         return s;
+    }
+
+    public char getHasBeenWonBy() {
+        return this.hasBeenWonBy;
+    }
+
+    public void setHasBeenWon(char hasBeenWonBy) {
+        this.hasBeenWonBy = hasBeenWonBy;
     }
 }
