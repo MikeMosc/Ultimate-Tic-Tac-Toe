@@ -32,13 +32,17 @@ public class TicTacToeScene extends BorderPane {
     @FXML private GridPane small20;
     @FXML private GridPane small21;
     @FXML private GridPane small22;
-    @FXML private Label info;
+    @FXML private Label xInfo;
+    @FXML private Label oInfo;
     private boolean begin;
     private boolean gameOver;
     private final String INACTIVE = "-fx-background-color: rgb(255, 59, 71);";
     private final String ACTIVE = "-fx-background-color: rgb(0, 255, 74);";
     private final String X_WIN = "-fx-background-color: rgb(73, 132, 226);";
     private final String O_WIN = "-fx-background-color: rgb(255, 242, 77);";
+    private final String X_TEXT = "-fx-text-fill: rgb(73, 132, 226);";
+    private final String O_TEXT = "-fx-text-fill: rgb(200, 210, 100);";
+
     private final String TRANSPARENT = "-fx-background-color: transparent;";
 
     private GridPane[][] grids;
@@ -76,14 +80,28 @@ public class TicTacToeScene extends BorderPane {
         grids[2][1] = small21;
         grids[2][2] = small22;
 
+        xInfo.setStyle(X_TEXT);
+        oInfo.setStyle(O_TEXT);
+
         resetGrid();
 
         newGame.setOnAction(event -> {
             removeContents();
             resetGrid();
-            info.setText("");
+            xInfo.setText("");
+            oInfo.setText("");
             buttons.forEach(button -> button.setDisable(false));
             //TODO Reset back end grids and shit
+            for(int i = 0; i <  bigBoard.smallBoards.length; i++) {
+                for(int j = 0; j <  bigBoard.smallBoards[i].length; j++) {
+                    bigBoard.smallBoards[i][j].setHasBeenWon('-');
+                    for(int k = 0; k < bigBoard.smallBoards[i][j].smallBoard.length; k++) {
+                        for(int l = 0; l < bigBoard.smallBoards[i][j].smallBoard[k].length; l++) {
+                            bigBoard.smallBoards[i][j].smallBoard[k][l] = '-';
+                        }
+                    }
+                }
+            }
             message.setText("Ultimate Tic Tac Toe");
         });
 
@@ -166,9 +184,11 @@ public class TicTacToeScene extends BorderPane {
         if(bigBoard.smallBoards[bigRow][bigCol].getHasBeenWonBy() == '-') {
             if(bigBoard.smallBoards[bigRow][bigCol].hasOWon()) {
                 setOWonColors(bigRow, bigCol);
+                oInfo.setText("Player O has won board small board [" + bigRow + " , " + bigCol + "]!");
                 bigBoard.smallBoards[bigRow][bigCol].setHasBeenWon('O');
             } else if (bigBoard.smallBoards[bigRow][bigCol].hasXWon()) {
                 setXWonColors(bigRow, bigCol);
+                xInfo.setText("Player X has won board small board [" + bigRow + " , " + bigCol + "]!");
                 bigBoard.smallBoards[bigRow][bigCol].setHasBeenWon('X');
             }
         }
@@ -248,8 +268,8 @@ public class TicTacToeScene extends BorderPane {
                     player.setX(smallRow);
                     player.setY(smallCol);
                     bigBoard.smallBoards[bigRow][bigCol].placeMove(player, 'X');
-                    info.setText("large grid row: " + bigRow + " col: " + bigCol + "\n" +
-                            "small grid row: " + smallRow + " col: " + smallCol);
+                    xInfo.setText("Player X moved to large board: [" + bigRow + " , " + bigCol + "]\n" +
+                            "Player X moved to small board: [" + smallRow + " , " + smallCol + "]");
 
                     modifyForWins(bigRow, bigCol);
                     resetColors(bigRow, bigCol, smallRow, smallCol);
@@ -267,18 +287,20 @@ public class TicTacToeScene extends BorderPane {
                         smallCol = cpu.getY();
                         getByCell(bigRow, bigCol, smallRow, smallCol).fire();
                         bigBoard.smallBoards[bigRow][bigCol].placeMove(cpu, 'O');
+                        oInfo.setText("Player O moved to large board: [" + bigRow + " , " + bigCol + "]\n" +
+                                "Player O moved to small board: [" + smallRow + " , " + smallCol + "]");
                         modifyForWins(bigRow, bigCol);
                         resetColors(bigRow, bigCol, smallRow, smallCol);
                     } else {
                         buttons.forEach(button -> button.setDisable(true));
                     }
                 } else {
-                    info.setText("Spot already taken!");
+                    xInfo.setText("Spot already taken!");
                 }
             } else if(!bigBoard.isUserMove() && !gameOver) {
                 source.setText("O");
-                info.setText("large grid row: " + bigRow + " col: " + bigCol + "\n" +
-                        "small grid row: " + smallRow + " col: " + smallCol);
+                oInfo.setText("Player O moved to large board: [" + bigRow + " , " + bigCol + "]\n" +
+                        "Player O moved to small board: [" + smallRow + " , " + smallCol + "]");
 
                 modifyForWins(bigRow, bigCol);
                 resetColors(bigRow, bigCol, smallRow, smallCol);
@@ -287,7 +309,7 @@ public class TicTacToeScene extends BorderPane {
             } else if(gameOver) {
                 buttons.forEach(button -> button.setDisable(true));
             } else {
-                info.setText("Can't play there!");
+                xInfo.setText("Can't play there!");
             }
         }
     }

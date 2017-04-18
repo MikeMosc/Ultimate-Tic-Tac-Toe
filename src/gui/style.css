@@ -24,6 +24,14 @@
     -fx-background-color: rgb(73, 132, 226);
 }
 
+.x-text {
+    -fx-text-fill: rgb(73, 132, 226);
+}
+
 .o-win {
     -fx-background-color: rgb(255, 242, 77);
+}
+
+.o-text {
+    -fx-text-fill: rgb(255, 242, 77);
 }
