@@ -36,6 +36,8 @@ public class TicTacToeScene extends BorderPane {
     private boolean begin;
     private final String INACTIVE = "-fx-background-color: rgb(255, 59, 71);";
     private final String ACTIVE = "-fx-background-color: rgb(0, 255, 74);";
+    private final String X_WIN = "-fx-background-color: rgb(73, 132, 226);";
+    private final String O_WIN = "-fx-background-color: rgb(255, 242, 77);";
     private final String TRANSPARENT = "-fx-background-color: transparent;";
 
     private GridPane[][] grids;
@@ -140,6 +142,20 @@ public class TicTacToeScene extends BorderPane {
 
     }
 
+    private void resetColors(int bigRow, int bigCol, int smallRow, int smallCol) {
+        grids[bigRow][bigCol].setStyle(INACTIVE);
+        grids[bigRow][bigCol].getChildren()
+                .stream()
+                .filter(node -> node instanceof Button)
+                .forEach(node -> node.setStyle(TRANSPARENT));
+
+        grids[smallRow][smallCol].setStyle(ACTIVE);
+        grids[smallRow][smallCol].getChildren()
+                .stream()
+                .filter(node -> node instanceof Button)
+                .forEach(node -> node.setStyle(TRANSPARENT));
+    }
+
     private class TicTacToeListener implements EventHandler<ActionEvent> {
 
         private int bigRow, bigCol, smallRow, smallCol;
@@ -169,17 +185,8 @@ public class TicTacToeScene extends BorderPane {
                     info.setText("large grid row: " + bigRow + " col: " + bigCol + "\n" +
                             "small grid row: " + smallRow + " col: " + smallCol);
 
-                    grids[bigRow][bigCol].setStyle(INACTIVE);
-                    grids[bigRow][bigCol].getChildren()
-                            .stream()
-                            .filter(node -> node instanceof Button)
-                            .forEach(node -> node.setStyle(TRANSPARENT));
+                    resetColors(bigRow, bigCol, smallRow, smallCol);
 
-                    grids[smallRow][smallCol].setStyle(ACTIVE);
-                    grids[smallRow][smallCol].getChildren()
-                            .stream()
-                            .filter(node -> node instanceof Button)
-                            .forEach(node -> node.setStyle(TRANSPARENT));
                     bigBoard.setUserMove(false);
 
                     cpu = bigBoard.smallBoards[smallRow][smallCol].findBestMove(bigBoard);
@@ -201,17 +208,7 @@ public class TicTacToeScene extends BorderPane {
                 info.setText("large grid row: " + bigRow + " col: " + bigCol + "\n" +
                         "small grid row: " + smallRow + " col: " + smallCol);
 
-                grids[bigRow][bigCol].setStyle(INACTIVE);
-                grids[bigRow][bigCol].getChildren()
-                        .stream()
-                        .filter(node -> node instanceof Button)
-                        .forEach(node -> node.setStyle(TRANSPARENT));
-
-                grids[smallRow][smallCol].setStyle(ACTIVE);
-                grids[smallRow][smallCol].getChildren()
-                        .stream()
-                        .filter(node -> node instanceof Button)
-                        .forEach(node -> node.setStyle(TRANSPARENT));
+                resetColors(bigRow, bigCol, smallRow, smallCol);
 
                 checkForWins();
                 bigBoard.setUserMove(true);
