@@ -138,10 +138,11 @@
         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
       </rowConstraints>
     </GridPane>
-    <Label fx:id="info" alignment="CENTER" contentDisplay="CENTER" layoutX="41.0" layoutY="671.0" prefHeight="34.0" prefWidth="523.0" text="" textAlignment="LEFT">
+    <Label id="info" fx:id="xInfo" alignment="CENTER" contentDisplay="CENTER" layoutX="42.0" layoutY="671.0" prefHeight="34.0" prefWidth="370.0" text="" textAlignment="LEFT">
       <font>
-        <Font name="Gentium Book Basic" size="14.0" />
+        <Font name="Gentium Book Basic" size="14.0" fx:id="x2" />
       </font>
     </Label>
+    <Label id="info" fx:id="oInfo" alignment="CENTER" contentDisplay="CENTER" font="$x2" layoutX="427.0" layoutY="671.0" prefHeight="34.0" prefWidth="300.0" text="" textAlignment="LEFT" />
   </children>
 </AnchorPane>
