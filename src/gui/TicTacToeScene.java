@@ -12,11 +12,20 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import models.BigBoard;
 import models.Square;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
+/**
+ * Ultimate Tic Tac Toe Controller class.
+ * This is the controller class for the on-screen view.
+ * This class links up the the fxml file to manipulate all of the UI elements created by JavaFX.
+ *
+ * Artificial Intelligence.
+ * April 19th, 2017.
+ * @author Matthew Gimbut
+ * @author Michael Moscariello
+ */
 public class TicTacToeScene extends BorderPane {
 
     @FXML private AnchorPane anchor;
