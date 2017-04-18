@@ -118,7 +118,7 @@ public class SmallBoard implements Board
                     smallBoard[i][j] = xSpace;
 
                     int moveVal = miniMax(0, false, b, -1000, 1000);
-
+                    System.out.println("moveVal = " + moveVal);
                     //Undo the move
                     smallBoard[i][j] = emptySpace;
 
@@ -130,11 +130,12 @@ public class SmallBoard implements Board
                 }
             }
         }
+        System.out.println("BestMove = " + bestVal);
         return bestMove;
     }
 
     public int miniMax(int depth, boolean isMaximizingPlayer, BigBoard b, int alpha, int beta){
-        System.out.println("Blah");
+
         int bestVal = 0;
 
         if (hasXWon()){
@@ -146,7 +147,7 @@ public class SmallBoard implements Board
         else if(getAvailableMoves().isEmpty()){
             return bestVal;
         }
-        else if(depth < 1000000000){
+        else if(depth >= 7){
             return bestVal;
         }
         else{
@@ -168,7 +169,6 @@ public class SmallBoard implements Board
                             smallBoard[i][j] = xSpace;
                             Square lastMove = new Square(i, j);
 
-                            //bestVal = max(bestVal, miniMax(depth+1, !isMaximizingPlayer, b, alpha, beta));
                             bestVal = max(bestVal, b.miniMax(depth + 1, !isMaximizingPlayer, lastMove, alpha, beta));
                             alpha = max(alpha, bestVal);
 
@@ -178,7 +178,6 @@ public class SmallBoard implements Board
 
                             if (beta >= alpha)
                             {
-                                System.out.println("Bing Bong1");
                                 break;
                             }
 
@@ -209,7 +208,6 @@ public class SmallBoard implements Board
                             beta = min(beta, bestVal);
                             if (beta <= alpha)
                             {
-                                System.out.println("Bing Bong3");
                                 break;
                             }
 
