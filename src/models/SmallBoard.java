@@ -174,7 +174,7 @@ public class SmallBoard {
             return -100 * countOSpots();
         }
         else if(depth >= 7 && countXSpots() > countOSpots()){
-            return 100 * countOSpots();
+            return 100 * countXSpots();
         }
         else if(depth >= 7 && countOSpots() == countXSpots()){
             return bestVal;
