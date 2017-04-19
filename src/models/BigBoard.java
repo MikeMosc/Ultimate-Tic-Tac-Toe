@@ -6,9 +6,8 @@ import static java.lang.Integer.min;
 import static java.lang.Math.max;
 
 /**
- * Ultimate Tic Tac Toe Controller class.
- * This is the controller class for the on-screen view.
- * This class links up the the fxml file to manipulate all of the UI elements created by JavaFX.
+ * Ultimate Tic Tac Toe big board model class.
+ * This class is part of the model to represent the ultimate tic tac toe board.
  * Artificial Intelligence.
  * April 19th, 2017.
  * @author Matthew Gimbut
@@ -21,10 +20,13 @@ public class BigBoard
 
     List<Square> availableMoves;
 
-    private final char xSpace = 'X'; //Player
-    private final char oSpace = 'O'; //Computer
-    private final char emptySpace = '_';
+    private final char xSpace = 'X'; //Player; not used for BigBoard
+    private final char oSpace = 'O'; //Computer; not used for BigBoard
+    private final char emptySpace = '_'; //not used for bigBoard
 
+    /**
+     * Constructor for BigBoard; initializes a 3 x 3 grid of SmallBoards
+     */
     public BigBoard(){
         isUserMove = true;
         for(int i = 0; i < smallBoards.length; i++){
@@ -34,6 +36,10 @@ public class BigBoard
         }
     }
 
+    /**
+     * Checks if the current bigboard game is over; this method is not currently used for this class
+     * @return true if the game is over, false otherwise
+     */
     public boolean isGameOver(){
         boolean b = false;
 
@@ -43,6 +49,11 @@ public class BigBoard
         return b;
     }
 
+    /**
+     * Returns the location of any SmallBoards that have available moves to take
+     * @param lastMove The last move of either player
+     * @return a list of available SmallBoard Squares.
+     */
     public List<Square> getAvailableMoves(Square lastMove){
 
         availableMoves = new ArrayList<>();
@@ -54,6 +65,10 @@ public class BigBoard
 
     }
 
+    /**
+     * returns the location of any smallBoards that have available moves to take
+     * @return A list of available SmallBoard Squares
+     */
     public List<Square> getAvailableMoves(){
         availableMoves = new ArrayList<>();
         for(int i = 0; i < smallBoards.length; i++){
@@ -66,6 +81,10 @@ public class BigBoard
         return availableMoves;
     }
 
+    /**
+     * Checks if the entire game has been won by O
+     * @return true if the game has been won by O, false otherwise
+     */
     public boolean hasOWon(){
         //Check for Diagonal Wins
         if ((smallBoards[0][0].getHasBeenWonBy() == 'O' && smallBoards[1][1].getHasBeenWonBy() == 'O' && smallBoards[2][2].getHasBeenWonBy() == 'O')
@@ -85,6 +104,10 @@ public class BigBoard
         return false;
     }
 
+    /**
+     * Checks if the entire game has been won by X
+     * @return true if the game has been won by X, false otherwise
+     */
     public boolean hasXWon(){
         //Check for Diagonal Wins
         if ((smallBoards[0][0].getHasBeenWonBy() == 'X' && smallBoards[1][1].getHasBeenWonBy() == 'X' && smallBoards[2][2].getHasBeenWonBy() == 'X')
@@ -104,57 +127,53 @@ public class BigBoard
         return false;
     }
 
-//    public Square findBestMove(Square lastMove){
-//        int alpha = -1000;
-//        int beta = 1000;
-//        int bestVal = 0;
-//        Square bestMove = new Square();
-//
-//        int moveVal = miniMax(0, false, lastMove, alpha, beta);
-//
-//        if(moveVal > bestVal)
-//        {
-//            bestMove.setX(lastMove.getX());
-//            bestMove.setY(lastMove.getY());
-//            bestVal = moveVal;
-//        }
-//
-//        return bestMove;
-//    }
-
+    /**
+     * The minimax algorithm for the game AI
+     * @param depth The depth of the current node being looked at
+     * @param isMaximizingPlayer The current player; Human = true; Computer = false
+     * @param lastMove The last move taken in the previous SmallBoard Minimax
+     * @param alpha Alpha value necessary for alpha-beta pruning
+     * @param beta Beta value necessary for alpha-beta pruning
+     * @return The best value received from the recursive minimax algorithm
+     */
     public int miniMax(int depth, boolean isMaximizingPlayer, Square lastMove, int alpha, int beta)
     {
 
         int bestVal = 0;
 
+        //Base Cases
         if (hasXWon())
         {
+            //Occurs if the game has been won by X
             return 10000 - depth;
         }
         else if (hasOWon())
         {
+            //Occurs if the game has been won by O
             return -10000 + depth;
         }
         else if(getAvailableMoves().isEmpty() && isMaximizingPlayer){
+            //Occurs if there are no available moves left and it is the human player's turn
             return 800;
         }
         else if(getAvailableMoves().isEmpty() && !isMaximizingPlayer){
+            //Occurs if there are no available moves left and it is the computer player's turn
             return -800;
         }
         else if (depth >= 7 && smallBoards[lastMove.getX()][lastMove.getY()].countOSpots() >
                 smallBoards[lastMove.getX()][lastMove.getY()].countXSpots()) {
-
+            //Occurs if The depth limit has been reached and more squares in the last move have been taken by O
             return -100 * smallBoards[lastMove.getX()][lastMove.getY()].countOSpots();
         }
         else if (depth >= 7 && smallBoards[lastMove.getX()][lastMove.getY()].countXSpots() >
                 smallBoards[lastMove.getX()][lastMove.getY()].countOSpots()) {
-
+            //Occurs if The depth limit has been reached and more squares in the last move have been taken by X
             return 100 * smallBoards[lastMove.getX()][lastMove.getY()].countXSpots();
         }
         else if(depth >= 7 && smallBoards[lastMove.getX()][lastMove.getY()].countOSpots() ==
                 smallBoards[lastMove.getX()][lastMove.getY()].countXSpots()){
-
-            return bestVal;
+            //Neither player is in the lead; return 0
+            return 0;
         }
         else {
 
@@ -170,8 +189,12 @@ public class BigBoard
             {
                 bestVal = -1000;
 
+                //bestVal receives the max of the next SmallBoard minimax (with last move's coordinates)
+                // vs bestVal
                 bestVal = max(bestVal, smallBoards[lastMove.getX()][lastMove.getY()].miniMax(depth, isMaximizingPlayer, this, alpha, beta));
                 System.out.println("Bigboard BestVal: " + bestVal);
+
+                //For use with alpha-beta pruning
                 alpha = max(alpha, bestVal);
                 if (beta >= alpha)
                 {
@@ -184,9 +207,12 @@ public class BigBoard
                 //Minimax will always start with Minimizing (computer) player
                 bestVal = 1000;
 
-
+                //bestVal receives the min of the next SmallBoard minimax (with last move's coordinates)
+                //vs bestVal
                 bestVal = min(bestVal, smallBoards[lastMove.getX()][lastMove.getY()].miniMax(depth, isMaximizingPlayer, this, alpha, beta));
                 System.out.println("Bigboard BestVal: " + bestVal);
+
+                //For use with alpha-beta pruning
                 beta = min(beta, bestVal);
                 if (beta <= alpha)
                 {
@@ -215,7 +241,7 @@ public class BigBoard
         isUserMove = userMove;
     }
 
-
+    @Override
     public String toString(){
         String s = new String();
 

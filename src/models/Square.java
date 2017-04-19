@@ -1,18 +1,28 @@
 package models;
 
 /**
- * Created by Mike on 4/4/2017.
+ * Created by Mike Moscariello on 4/4/2017.
+ * This class represents a space on a tic tac toe board and is important
+ * for remembering the last move that was taken.
  */
 public class Square
 {
-    int x, y;
-    int score = 0;
+    int x, y; //X and Y coordinates on a tic tac toe board.
+    int score = 0; //Depreciated; not used in Ultimate Tic Tac Toe
 
+    /**
+     * Overloaded constructor with an x and y coordinate.
+     * @param x
+     * @param y
+     */
     public Square(int x, int y){
         this.x = x;
         this.y = y;
     }
 
+    /**
+     * Default constructor
+     */
     public Square(){
 
     }
