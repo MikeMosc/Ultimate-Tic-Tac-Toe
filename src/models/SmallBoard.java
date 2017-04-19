@@ -47,6 +47,32 @@ public class SmallBoard {
         return b;
     }
 
+    public int countOSpots(){
+        int count = 0;
+
+        for(int i = 0; i < smallBoard.length; i++){
+            for(int j = 0; j < smallBoard[0].length; j++){
+                if(smallBoard[i][j] == 'O'){
+                    count = count + 1;
+                }
+            }
+        }
+        return count;
+    }
+
+    public int countXSpots(){
+        int count = 0;
+
+        for(int i = 0; i < smallBoard.length; i++){
+            for(int j = 0; j < smallBoard[0].length; j++){
+                if(smallBoard[i][j] == 'X'){
+                    count = count + 1;
+                }
+            }
+        }
+        return count;
+    }
+
     public boolean hasOWon(){
         //Check for Diagonal Wins
         if ((smallBoard[0][0] == smallBoard[1][1] && smallBoard[0][0] == smallBoard[2][2] && smallBoard[0][0] == oSpace)
@@ -144,7 +170,13 @@ public class SmallBoard {
         else if(getAvailableMoves().isEmpty() && !isMaximizingPlayer){
             return -800;
         }
-        else if (depth >= 8) {
+        else if (depth >= 7 && countOSpots() > countXSpots()) {
+            return -100 * countOSpots();
+        }
+        else if(depth >= 7 && countXSpots() > countOSpots()){
+            return 100 * countOSpots();
+        }
+        else if(depth >= 7 && countOSpots() == countXSpots()){
             return bestVal;
         }
         else{
