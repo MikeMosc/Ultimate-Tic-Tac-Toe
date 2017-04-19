@@ -176,6 +176,9 @@ public class SmallBoard {
         else if(depth >= 7 && countXSpots() > countOSpots()){
             return 100 * countOSpots();
         }
+        else if(depth >= 7 && countOSpots() == countXSpots()){
+            return bestVal;
+        }
         else{
 
             List<Square> statesAvailable = getAvailableMoves();

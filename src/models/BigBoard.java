@@ -151,7 +151,7 @@ public class BigBoard
 
             return 100 * smallBoards[lastMove.getX()][lastMove.getY()].countXSpots();
         }
-        else if(depth >= 9 && smallBoards[lastMove.getX()][lastMove.getY()].countOSpots() ==
+        else if(depth >= 7 && smallBoards[lastMove.getX()][lastMove.getY()].countOSpots() ==
                 smallBoards[lastMove.getX()][lastMove.getY()].countXSpots()){
 
             return bestVal;
