@@ -141,7 +141,19 @@ public class BigBoard
         else if(getAvailableMoves().isEmpty() && !isMaximizingPlayer){
             return -800;
         }
-        else if (depth >= 9) {
+        else if (depth >= 7 && smallBoards[lastMove.getX()][lastMove.getY()].countOSpots() >
+                smallBoards[lastMove.getX()][lastMove.getY()].countXSpots()) {
+
+            return -100 * smallBoards[lastMove.getX()][lastMove.getY()].countOSpots();
+        }
+        else if (depth >= 7 && smallBoards[lastMove.getX()][lastMove.getY()].countXSpots() >
+                smallBoards[lastMove.getX()][lastMove.getY()].countOSpots()) {
+
+            return 100 * smallBoards[lastMove.getX()][lastMove.getY()].countXSpots();
+        }
+        else if(depth >= 9 && smallBoards[lastMove.getX()][lastMove.getY()].countOSpots() ==
+                smallBoards[lastMove.getX()][lastMove.getY()].countXSpots()){
+
             return bestVal;
         }
         else {
