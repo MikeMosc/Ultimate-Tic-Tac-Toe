@@ -68,17 +68,17 @@ public class BigBoard
 
     public boolean hasOWon(){
         //Check for Diagonal Wins
-        if ((smallBoards[0][0].hasOWon() && smallBoards[1][1].hasOWon() && smallBoards[2][2].hasOWon())
-                || (smallBoards[0][2].hasOWon() && smallBoards[1][1].hasOWon() && smallBoards[2][0].hasOWon())) {
+        if ((smallBoards[0][0].getHasBeenWonBy() == 'O' && smallBoards[1][1].getHasBeenWonBy() == 'O' && smallBoards[2][2].getHasBeenWonBy() == 'O')
+                || (smallBoards[0][2].getHasBeenWonBy() == 'O' && smallBoards[1][1].getHasBeenWonBy() == 'O' && smallBoards[2][0].getHasBeenWonBy() == 'O')) {
             return true;
         }
         for(int i = 0; i < smallBoards.length; i++){
             //Check for row wins
-            if(smallBoards[i][0].hasOWon() && smallBoards[i][1].hasOWon() && smallBoards[i][2].hasOWon()){
+            if(smallBoards[i][0].getHasBeenWonBy() == 'O' && smallBoards[i][1].getHasBeenWonBy() == 'O' && smallBoards[i][2].getHasBeenWonBy() == 'O'){
                 return true;
             }
             //Check for column wins
-            else if(smallBoards[0][i].hasOWon() && smallBoards[1][i].hasOWon() && smallBoards[2][i].hasOWon()){
+            else if(smallBoards[0][i].getHasBeenWonBy() == 'O' && smallBoards[1][i].getHasBeenWonBy() == 'O' && smallBoards[2][i].getHasBeenWonBy() == 'O'){
                 return true;
             }
         }
@@ -87,17 +87,17 @@ public class BigBoard
 
     public boolean hasXWon(){
         //Check for Diagonal Wins
-        if ((smallBoards[0][0].hasXWon() && smallBoards[1][1].hasXWon() && smallBoards[2][2].hasXWon())
-                || (smallBoards[0][2].hasXWon() && smallBoards[1][1].hasXWon() && smallBoards[2][0].hasXWon())) {
+        if ((smallBoards[0][0].getHasBeenWonBy() == 'X' && smallBoards[1][1].getHasBeenWonBy() == 'X' && smallBoards[2][2].getHasBeenWonBy() == 'X')
+                || (smallBoards[0][2].getHasBeenWonBy() == 'X' && smallBoards[1][1].getHasBeenWonBy() == 'X' && smallBoards[2][0].getHasBeenWonBy() == 'X')) {
             return true;
         }
         for(int i = 0; i < smallBoards.length; i++){
             //Check for row wins
-            if(smallBoards[i][0].hasXWon() && smallBoards[i][1].hasXWon() && smallBoards[i][2].hasXWon()){
+            if(smallBoards[i][0].getHasBeenWonBy() == 'X' && smallBoards[i][1].getHasBeenWonBy() == 'X' && smallBoards[i][2].getHasBeenWonBy() == 'X'){
                 return true;
             }
             //Check for column wins
-            else if(smallBoards[0][i].hasXWon() && smallBoards[1][i].hasXWon() && smallBoards[2][i].hasXWon()){
+            else if(smallBoards[0][i].getHasBeenWonBy() == 'X' && smallBoards[1][i].getHasBeenWonBy() == 'X' && smallBoards[2][i].getHasBeenWonBy() == 'X'){
                 return true;
             }
         }
@@ -135,17 +135,27 @@ public class BigBoard
         {
             return -10000 + depth;
         }
-        else if (getAvailableMoves().isEmpty()){
+        else if(getAvailableMoves().isEmpty() && isMaximizingPlayer){
+            return 800;
+        }
+        else if(getAvailableMoves().isEmpty() && !isMaximizingPlayer){
+            return -800;
+        }
+        else if (depth >= 10 && isMaximizingPlayer) {
             return bestVal;
         }
-        else if (depth >= 7) {
+        else if(depth >= 10 && !isMaximizingPlayer){
             return bestVal;
         }
         else {
 
             List<Square> statesAvailable = getAvailableMoves(lastMove);
-            if (statesAvailable.isEmpty())
-                return 0;
+            if (statesAvailable.isEmpty() && isMaximizingPlayer)
+            {
+                return 800;
+            }else if(statesAvailable.isEmpty() && !isMaximizingPlayer){
+                return -800;
+            }
 
             if (isMaximizingPlayer)
             {
@@ -176,6 +186,7 @@ public class BigBoard
 
             }
         }
+        System.out.println("BigBoard Minimax Best Val: " + bestVal);
         return bestVal;
     }
 
