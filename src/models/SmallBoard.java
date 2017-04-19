@@ -144,10 +144,7 @@ public class SmallBoard {
         else if(getAvailableMoves().isEmpty() && !isMaximizingPlayer){
             return -800;
         }
-        else if (depth >= 9 && isMaximizingPlayer) {
-            return bestVal;
-        }
-        else if(depth >= 9 && !isMaximizingPlayer){
+        else if (depth >= 8) {
             return bestVal;
         }
         else{
