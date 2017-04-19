@@ -2,7 +2,8 @@ package models;
 
 /**
  * Created by Mike Moscariello on 4/4/2017.
- * This class represents a space on a tic tac toe board and is important for remembering the last move that was taken.
+ * This class represents a space on a tic tac toe board and is important
+ * for remembering the last move that was taken.
  */
 public class Square
 {

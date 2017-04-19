@@ -298,7 +298,7 @@ public class SmallBoard {
                             smallBoard[i][j] = oSpace;
                             Square lastMove = new Square(i, j);
 
-                            //Receiving the max of the big board minimax vs the current bestval
+                            //Receiving the min of the big board minimax vs the current bestval
                             bestVal = min(bestVal, b.miniMax(depth + 1, !isMaximizingPlayer, lastMove, alpha, beta));
 
                             //Undo the move
