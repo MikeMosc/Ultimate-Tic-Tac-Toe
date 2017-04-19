@@ -16,7 +16,6 @@ import static java.lang.Math.max;
  */
 public class BigBoard
 {
-    BigBoard bigBoard = this;
     public SmallBoard[][] smallBoards = new SmallBoard[3][3];
     private boolean isUserMove;
 
@@ -69,17 +68,17 @@ public class BigBoard
 
     public boolean hasOWon(){
         //Check for Diagonal Wins
-        if ((smallBoards[0][0].hasOWon() && smallBoards[1][1].hasOWon() && smallBoards[2][2].hasOWon())
-                || (smallBoards[0][2].hasOWon() && smallBoards[1][1].hasOWon() && smallBoards[2][0].hasOWon())) {
+        if ((smallBoards[0][0].getHasBeenWonBy() == 'O' && smallBoards[1][1].getHasBeenWonBy() == 'O' && smallBoards[2][2].getHasBeenWonBy() == 'O')
+                || (smallBoards[0][2].getHasBeenWonBy() == 'O' && smallBoards[1][1].getHasBeenWonBy() == 'O' && smallBoards[2][0].getHasBeenWonBy() == 'O')) {
             return true;
         }
         for(int i = 0; i < smallBoards.length; i++){
             //Check for row wins
-            if(smallBoards[i][0].hasOWon() && smallBoards[i][1].hasOWon() && smallBoards[i][2].hasOWon()){
+            if(smallBoards[i][0].getHasBeenWonBy() == 'O' && smallBoards[i][1].getHasBeenWonBy() == 'O' && smallBoards[i][2].getHasBeenWonBy() == 'O'){
                 return true;
             }
             //Check for column wins
-            else if(smallBoards[0][i].hasOWon() && smallBoards[1][i].hasOWon() && smallBoards[2][i].hasOWon()){
+            else if(smallBoards[0][i].getHasBeenWonBy() == 'O' && smallBoards[1][i].getHasBeenWonBy() == 'O' && smallBoards[2][i].getHasBeenWonBy() == 'O'){
                 return true;
             }
         }
@@ -88,17 +87,17 @@ public class BigBoard
 
     public boolean hasXWon(){
         //Check for Diagonal Wins
-        if ((smallBoards[0][0].hasXWon() && smallBoards[1][1].hasXWon() && smallBoards[2][2].hasXWon())
-                || (smallBoards[0][2].hasXWon() && smallBoards[1][1].hasXWon() && smallBoards[2][0].hasXWon())) {
+        if ((smallBoards[0][0].getHasBeenWonBy() == 'X' && smallBoards[1][1].getHasBeenWonBy() == 'X' && smallBoards[2][2].getHasBeenWonBy() == 'X')
+                || (smallBoards[0][2].getHasBeenWonBy() == 'X' && smallBoards[1][1].getHasBeenWonBy() == 'X' && smallBoards[2][0].getHasBeenWonBy() == 'X')) {
             return true;
         }
         for(int i = 0; i < smallBoards.length; i++){
             //Check for row wins
-            if(smallBoards[i][0].hasXWon() && smallBoards[i][1].hasXWon() && smallBoards[i][2].hasXWon()){
+            if(smallBoards[i][0].getHasBeenWonBy() == 'X' && smallBoards[i][1].getHasBeenWonBy() == 'X' && smallBoards[i][2].getHasBeenWonBy() == 'X'){
                 return true;
             }
             //Check for column wins
-            else if(smallBoards[0][i].hasXWon() && smallBoards[1][i].hasXWon() && smallBoards[2][i].hasXWon()){
+            else if(smallBoards[0][i].getHasBeenWonBy() == 'X' && smallBoards[1][i].getHasBeenWonBy() == 'X' && smallBoards[2][i].getHasBeenWonBy() == 'X'){
                 return true;
             }
         }
@@ -125,40 +124,48 @@ public class BigBoard
 
     public int miniMax(int depth, boolean isMaximizingPlayer, Square lastMove, int alpha, int beta)
     {
-        System.out.println("This Is happening");
+
         int bestVal = 0;
 
         if (hasXWon())
         {
-            return 1000 - depth;
+            return 10000 - depth;
         }
         else if (hasOWon())
         {
-            return -1000 + depth;
+            return -10000 + depth;
         }
-        else if (availableMoves.isEmpty()){
+        else if(getAvailableMoves().isEmpty() && isMaximizingPlayer){
+            return 800;
+        }
+        else if(getAvailableMoves().isEmpty() && !isMaximizingPlayer){
+            return -800;
+        }
+        else if (depth >= 10 && isMaximizingPlayer) {
             return bestVal;
         }
-        else if (depth >= 1000000000)
-        {
+        else if(depth >= 10 && !isMaximizingPlayer){
             return bestVal;
         }
-        else
-        {
+        else {
 
             List<Square> statesAvailable = getAvailableMoves(lastMove);
-            if (statesAvailable.isEmpty())
-                return 0;
+            if (statesAvailable.isEmpty() && isMaximizingPlayer)
+            {
+                return 800;
+            }else if(statesAvailable.isEmpty() && !isMaximizingPlayer){
+                return -800;
+            }
 
             if (isMaximizingPlayer)
             {
                 bestVal = -1000;
 
-                bestVal = max(bestVal, smallBoards[lastMove.getX()][lastMove.getY()].miniMax(depth, isMaximizingPlayer, bigBoard, alpha, beta));
+                bestVal = max(bestVal, smallBoards[lastMove.getX()][lastMove.getY()].miniMax(depth, isMaximizingPlayer, this, alpha, beta));
+                System.out.println("Bigboard BestVal: " + bestVal);
                 alpha = max(alpha, bestVal);
                 if (beta >= alpha)
                 {
-                    System.out.println("Bing Bong");
                     return bestVal;
                 }
 
@@ -169,7 +176,8 @@ public class BigBoard
                 bestVal = 1000;
 
 
-                bestVal = min(bestVal, smallBoards[lastMove.getX()][lastMove.getY()].miniMax(depth, isMaximizingPlayer, bigBoard, alpha, beta));
+                bestVal = min(bestVal, smallBoards[lastMove.getX()][lastMove.getY()].miniMax(depth, isMaximizingPlayer, this, alpha, beta));
+                System.out.println("Bigboard BestVal: " + bestVal);
                 beta = min(beta, bestVal);
                 if (beta <= alpha)
                 {
@@ -178,6 +186,7 @@ public class BigBoard
 
             }
         }
+        System.out.println("BigBoard Minimax Best Val: " + bestVal);
         return bestVal;
     }
 
