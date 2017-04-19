@@ -1,19 +1,20 @@
 package models;
 
-import interfaces.Board;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-
 import static java.lang.Integer.min;
 import static java.lang.Math.max;
 
 /**
- * Created by MelloMike on 4/3/2017.
+ * Ultimate Tic Tac Toe small board model class.
+ * This class is part of the model to represent the ultimate tic tac toe board.
+ * Artificial Intelligence.
+ * April 19th, 2017.
+ * @author Matthew Gimbut
+ * @author Michael Moscariello
  */
-public class SmallBoard implements Board
-{
+public class SmallBoard {
     public char[][] smallBoard = new char[3][3];
     List<Square> availableMoves;
     public Scanner scan = new Scanner(System.in);
@@ -94,14 +95,6 @@ public class SmallBoard implements Board
             }
         }
         return availableMoves;
-    }
-
-    void takeHumanInput() {
-        System.out.println("Your move: ");
-        int x = scan.nextInt();
-        int y = scan.nextInt();
-        Square point = new Square(x, y);
-        placeMove(point, xSpace);
     }
 
     public Square placeMove(Square square, char player){
@@ -232,10 +225,18 @@ public class SmallBoard implements Board
         return s;
     }
 
+    /**
+     * Getter for the char that contains the winning player's letter.
+     * @return The winning player's letter or '-' if no winner.
+     */
     public char getHasBeenWonBy() {
         return this.hasBeenWonBy;
     }
 
+    /**
+     * Setter for the char that contains the winning player's letter.
+     * @param hasBeenWonBy The player that has won the board.
+     */
     public void setHasBeenWon(char hasBeenWonBy) {
         this.hasBeenWonBy = hasBeenWonBy;
     }
