@@ -141,10 +141,7 @@ public class BigBoard
         else if(getAvailableMoves().isEmpty() && !isMaximizingPlayer){
             return -800;
         }
-        else if (depth >= 10 && isMaximizingPlayer) {
-            return bestVal;
-        }
-        else if(depth >= 10 && !isMaximizingPlayer){
+        else if (depth >= 9) {
             return bestVal;
         }
         else {
